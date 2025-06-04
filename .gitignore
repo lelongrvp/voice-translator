@@ -1,0 +1,60 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build output
+dist/
+build/
+tmp/
+temp/
+
+# Coverage directory
+coverage/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# dotenv environment variable files
+.env
+.env.*.local
+
+# Dependency directories
+jspm_packages/
+
+# Optional cache directories
+.npm/
+.eslintcache
+.stylelintcache
+.cache/
+.next/          # for Next.js
+out/            # for Next.js static exports
+
+# Test output
+test-output/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# REPL history
+.node_repl_history
+
+# WebStorm project files
+.idea/
+*.iml
+*.iws
+
+# VSCode files if also used
+.vscode/
+
+# Packaged files
+*.tgz
+integrations/teams-app/*.zip
+

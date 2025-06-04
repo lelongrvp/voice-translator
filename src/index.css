@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Inter Tight";
+  --color-white: #ffffff;
+  --color-black: #1e2122;
+  --color-grey: #e7ebf2;
+  --color-background-1: #ebf4f8;
+  --color-background-2: #f6f8f9;
+  --color-brand: #3a93b4;
+  --color-brand-hover: #247b9b;
+  --color-brand-soft: #e1f2f6;
+  --color-brand-soft-hover: #d0ecf3;
+  --color-neutral-1: #e7ebf2;
+  --color-neutral-1-hover: #dfe5ef;
+  --color-neutral-2: #8b98b1;
+  --color-neutral-3: #b7becd;
+  --color-error: #c51313;
+  --color-error-hover: #fce4e4;
+  --color-green-1: #09aa5c;
+  --color-green-2: #e8fbe8;
+}
+
+@layer base {
+  html,
+  body {
+    font-family: var(--font-display), sans-serif;
+    color: var(--color-black);
+    background-color: var(--color-background-1);
+  }
+}
+
+.color-white {
+  color: var(--color-white);
+}
+
+.color-black {
+  color: var(--color-black);
+}
+
+.color-grey {
+  color: var(--color-grey);
+}
+
+.color-background-1 {
+  color: var(--color-background-1);
+}
+
+.color-background-2 {
+  color: var(--color-background-2);
+}
+
+.color-brand {
+  color: var(--color-brand);
+}
+
+.color-brand-hover {
+  color: var(--color-brand-hover);
+}
+
+.color-brand-soft {
+  color: var(--color-brand-soft);
+}
+
+.color-brand-soft-hover {
+  color: var(--color-brand-soft-hover);
+}
+
+.color-neutral-1 {
+  color: var(--color-neutral-1);
+}
+
+.color-neutral-1-hover {
+  color: var(--color-neutral-1-hover);
+}
+
+.color-neutral-2 {
+  color: var(--color-neutral-2);
+}
+
+.color-neutral-3 {
+  color: var(--color-neutral-3);
+}
+
+.color-error {
+  color: var(--color-error);
+}
+
+.color-error-hover {
+  color: var(--color-error-hover);
+}
+
+.color-green-1 {
+  color: var(--color-green-1);
+}
+
+.color-green-2 {
+  color: var(--color-green-2);
+}
