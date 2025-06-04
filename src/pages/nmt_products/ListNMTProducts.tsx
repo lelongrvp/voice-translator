@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Table from "../../components/Table";
 import { Link } from "react-router-dom";
 
@@ -11,11 +11,11 @@ function ListNMTProducts() {
   useEffect(() => {
     const fetchNMTProducts = async () => {
       try {
-        const response = await axios.get(
+        const response = await mockAPI.getAll(
           "http://localhost:3000/api/nmt-products",
         );
         setNMTProducts(response.data);
-      } catch (err) {
+      } catch {
         setError("Failed to fetch NMT products");
       } finally {
         setLoading(false);
@@ -52,7 +52,6 @@ function ListNMTProducts() {
         data={nmtProducts}
         columns={columns}
         basePath="/nmt_products"
-        dataKey="products"
       />
     </div>
   );

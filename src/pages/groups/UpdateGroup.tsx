@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Form from "../../components/Form";
 
 function UpdateGroup() {
@@ -15,11 +15,9 @@ function UpdateGroup() {
     if (!isNew) {
       const fetchGroup = async () => {
         try {
-          const response = await axios.get(
-            `http://localhost:3000/api/groups/${id}`,
-          );
-          setGroup(response.data);
-        } catch (err) {
+          const response = await mockAPI.getById("groups", id!);
+          setGroup(response.data as any);
+        } catch {
           setError("Failed to fetch group");
         } finally {
           setLoading(false);
@@ -31,15 +29,15 @@ function UpdateGroup() {
     }
   }, [id, isNew]);
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       if (isNew) {
-        await axios.post("http://localhost:3000/api/groups", data);
+        await mockAPI.create("groups", data);
       } else {
-        await axios.put(`http://localhost:3000/api/groups/${id}`, data);
+        await mockAPI.update("groups", id!, data);
       }
       navigate("/groups/list");
-    } catch (err) {
+    } catch {
       setError(isNew ? "Failed to create group" : "Failed to update group");
     }
   };

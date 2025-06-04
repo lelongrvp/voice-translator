@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Form from "../../components/Form";
 
 function UpdateLicense() {
@@ -15,11 +15,11 @@ function UpdateLicense() {
     if (!isNew) {
       const fetchLicense = async () => {
         try {
-          const response = await axios.get(
+          const response = await mockAPI.getById(
             `http://localhost:3000/api/licenses/${id}`,
           );
           setLicense(response.data);
-        } catch (err) {
+        } catch {
           setError("Failed to fetch license");
         } finally {
           setLoading(false);
@@ -31,15 +31,15 @@ function UpdateLicense() {
     }
   }, [id, isNew]);
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       if (isNew) {
-        await axios.post("http://localhost:3000/api/licenses", data);
+        await mockAPI.create("licenses", data);
       } else {
-        await axios.put(`http://localhost:3000/api/licenses/${id}`, data);
+        await mockAPI.update("licenses", id!, data);
       }
       navigate("/licenses/list");
-    } catch (err) {
+    } catch {
       setError(isNew ? "Failed to create license" : "Failed to update license");
     }
   };

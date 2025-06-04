@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Modal from "../../components/Modal";
 
 function DeleteSTTProduct() {
@@ -14,11 +14,11 @@ function DeleteSTTProduct() {
   useEffect(() => {
     const fetchSTTProduct = async () => {
       try {
-        const response = await axios.get(
+        const response = await mockAPI.getById(
           `http://localhost:3000/api/stt-products/${id}`,
         );
-        setSTTProduct(response.data);
-      } catch (err) {
+        setSTTProduct(response.data as any);
+      } catch {
         setError("Failed to fetch STT product");
       } finally {
         setLoading(false);
@@ -29,9 +29,9 @@ function DeleteSTTProduct() {
 
   const handleConfirm = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/stt-products/${id}`);
+      await mockAPI.delete("sttProducts", id!);
       navigate("/stt_products/list");
-    } catch (err) {
+    } catch {
       setError("Failed to delete STT product");
     }
   };

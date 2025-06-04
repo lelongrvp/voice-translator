@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Modal from "../../components/Modal";
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  created_at: string;
+}
 
 function DeleteUser() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(true);
@@ -14,11 +22,9 @@ function DeleteUser() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/users/${id}`,
-        );
-        setUser(response.data);
-      } catch (err) {
+        const response = await mockAPI.getById("users", id ?? 0);
+        setUser(response.data as User);
+      } catch {
         setError("Failed to fetch user");
       } finally {
         setLoading(false);
@@ -29,9 +35,9 @@ function DeleteUser() {
 
   const handleConfirm = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/users/${id}`);
+      await mockAPI.delete("users", id!);
       navigate("/users/list");
-    } catch (err) {
+    } catch {
       setError("Failed to delete user");
     }
   };

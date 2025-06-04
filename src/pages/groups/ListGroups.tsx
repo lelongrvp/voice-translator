@@ -1,19 +1,30 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Table from "../../components/Table";
 import { Link } from "react-router-dom";
 
+interface Group {
+  id: number;
+  name: string;
+  desc?: string;
+  group_type?: string;
+  license_id: number;
+  app: string;
+  created_at: string;
+  [key: string]: unknown;
+}
+
 function ListGroups() {
-  const [groups, setGroups] = useState({ groups: [] });
+  const [groups, setGroups] = useState<{ groups: Group[] }>({ groups: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/groups");
-        setGroups(response.data);
-      } catch (err) {
+        const response = await mockAPI.getAll("groups");
+        setGroups(response.data as { groups: Group[] });
+      } catch {
         setError("Failed to fetch groups");
       } finally {
         setLoading(false);
@@ -46,12 +57,7 @@ function ListGroups() {
           Create Group
         </Link>
       </div>
-      <Table
-        data={groups}
-        columns={columns}
-        basePath="/groups"
-        dataKey="groups"
-      />
+      <Table data={groups.groups} columns={columns} basePath="/groups" />
     </div>
   );
 }

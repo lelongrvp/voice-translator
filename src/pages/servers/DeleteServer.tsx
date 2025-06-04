@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Modal from "../../components/Modal";
 
 function DeleteServer() {
@@ -14,11 +14,11 @@ function DeleteServer() {
   useEffect(() => {
     const fetchServer = async () => {
       try {
-        const response = await axios.get(
+        const response = await mockAPI.getById(
           `http://localhost:3000/api/servers/${id}`,
         );
-        setServer(response.data);
-      } catch (err) {
+        setServer(response.data as any);
+      } catch {
         setError("Failed to fetch server");
       } finally {
         setLoading(false);
@@ -29,9 +29,9 @@ function DeleteServer() {
 
   const handleConfirm = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/servers/${id}`);
+      await mockAPI.delete("servers", id!);
       navigate("/servers/list");
-    } catch (err) {
+    } catch {
       setError("Failed to delete server");
     }
   };

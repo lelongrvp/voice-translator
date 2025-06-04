@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Modal from "../../components/Modal";
+
+interface License {
+  id: number;
+  license_type: string;
+  server_id: number;
+  stt_id: number;
+  nmt_id: number;
+  expiration_date: string;
+  created_at: string;
+}
 
 function DeleteLicense() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [license, setLicense] = useState(null);
+  const [license, setLicense] = useState<License | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(true);
@@ -14,11 +24,9 @@ function DeleteLicense() {
   useEffect(() => {
     const fetchLicense = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/licenses/${id}`,
-        );
-        setLicense(response.data);
-      } catch (err) {
+        const response = await mockAPI.getById("licenses", id!);
+        setLicense(response.data as License);
+      } catch {
         setError("Failed to fetch license");
       } finally {
         setLoading(false);
@@ -29,9 +37,9 @@ function DeleteLicense() {
 
   const handleConfirm = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/licenses/${id}`);
+      await mockAPI.delete("licenses", id!);
       navigate("/licenses/list");
-    } catch (err) {
+    } catch {
       setError("Failed to delete license");
     }
   };

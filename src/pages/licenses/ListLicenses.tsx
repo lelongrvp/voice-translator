@@ -1,19 +1,32 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Table from "../../components/Table";
 import { Link } from "react-router-dom";
 
+interface License {
+  id: number;
+  license_type: string;
+  server_id: number;
+  stt_id: number;
+  nmt_id: number;
+  expiration_date: string;
+  created_at: string;
+  [key: string]: unknown;
+}
+
 function ListLicenses() {
-  const [licenses, setLicenses] = useState({ licenses: [] });
+  const [licenses, setLicenses] = useState<{ licenses: License[] }>({
+    licenses: [],
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchLicenses = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/licenses");
-        setLicenses(response.data);
-      } catch (err) {
+        const response = await mockAPI.getAll("licenses");
+        setLicenses(response.data as { licenses: License[] });
+      } catch {
         setError("Failed to fetch licenses");
       } finally {
         setLoading(false);
@@ -46,12 +59,7 @@ function ListLicenses() {
           Create License
         </Link>
       </div>
-      <Table
-        data={licenses}
-        columns={columns}
-        basePath="/licenses"
-        dataKey="licenses"
-      />
+      <Table data={licenses.licenses} columns={columns} basePath="/licenses" />
     </div>
   );
 }

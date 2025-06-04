@@ -1,16 +1,18 @@
 import { useEffect, useState, type ReactNode } from "react";
 import type { AuthCredentials } from "../types/Auth";
 import { AuthContext } from "./AuthContext";
-import api from "../api/apiClient";
+import { mockAPI } from "../services/mockApi";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   );
+  const [role, setRole] = useState<string | null>(localStorage.getItem("role"));
 
   useEffect(() => {
     if (token) {
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      // Mock API doesn't need authorization headers, but we keep this for consistency
+      console.log("User authenticated with token:", token);
     }
   }, [token]);
 
@@ -19,14 +21,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     password: AuthCredentials["password"]
   ) => {
     try {
-      const response = await api.post("http://localhost:3000/api/auth/login", {
+      const response = await mockAPI.login({
         username,
         password,
       });
       const newToken = response.data.token;
+      const userRole = response.data.role || "user";
       localStorage.setItem("token", newToken);
-      api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+      localStorage.setItem("role", userRole);
       setToken(newToken);
+      setRole(userRole);
       return newToken;
     } catch (error) {
       console.error("Login failed:", error);
@@ -36,12 +40,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
-    delete api.defaults.headers.common["Authorization"];
+    localStorage.removeItem("role");
     setToken(null);
+    setRole(null);
   };
 
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, role, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

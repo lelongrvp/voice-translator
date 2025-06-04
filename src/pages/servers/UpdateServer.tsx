@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Form from "../../components/Form";
 
 function UpdateServer() {
@@ -15,11 +15,11 @@ function UpdateServer() {
     if (!isNew) {
       const fetchServer = async () => {
         try {
-          const response = await axios.get(
+          const response = await mockAPI.getById(
             `http://localhost:3000/api/servers/${id}`,
           );
-          setServer(response.data);
-        } catch (err) {
+          setServer(response.data as any);
+        } catch {
           setError("Failed to fetch server");
         } finally {
           setLoading(false);
@@ -31,15 +31,15 @@ function UpdateServer() {
     }
   }, [id, isNew]);
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       if (isNew) {
-        await axios.post("http://localhost:3000/api/servers", data);
+        await mockAPI.create("servers", data);
       } else {
-        await axios.put(`http://localhost:3000/api/servers/${id}`, data);
+        await mockAPI.update("servers", id!, data);
       }
       navigate("/servers/list");
-    } catch (err) {
+    } catch {
       setError(isNew ? "Failed to create server" : "Failed to update server");
     }
   };

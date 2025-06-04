@@ -1,4 +1,4 @@
-import Table from "../../components/Table";
+import Table, { type TableItem } from "../../components/Table";
 import { Link } from "react-router-dom";
 import { useUser } from "../../hooks/useUser.ts";
 import type { User } from "../../types/User.ts";
@@ -28,7 +28,7 @@ function ListUsers() {
         </Link>
       </div>
       <Table
-        data={userList?.data}
+        data={userList?.data as unknown as TableItem[]}
         columns={columns}
         basePath={userListEndpoint}
       />

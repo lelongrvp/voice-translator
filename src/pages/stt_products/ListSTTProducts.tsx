@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Table from "../../components/Table";
 import { Link } from "react-router-dom";
 
@@ -11,11 +11,11 @@ function ListSTTProducts() {
   useEffect(() => {
     const fetchSTTProducts = async () => {
       try {
-        const response = await axios.get(
+        const response = await mockAPI.getAll(
           "http://localhost:3000/api/stt-products",
         );
         setSTTProducts(response.data);
-      } catch (err) {
+      } catch {
         setError("Failed to fetch STT products");
       } finally {
         setLoading(false);
@@ -52,7 +52,6 @@ function ListSTTProducts() {
         data={sttProducts}
         columns={columns}
         basePath="/stt_products"
-        dataKey="products"
       />
     </div>
   );

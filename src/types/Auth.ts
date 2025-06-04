@@ -9,6 +9,6 @@ export type AuthContextType = {
   login: (
     username: AuthCredentials["username"],
     password: AuthCredentials["password"]
-  ) => Promise<void>;
+  ) => Promise<string>;
   logout: () => void;
 };

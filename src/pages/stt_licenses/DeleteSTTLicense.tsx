@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Modal from "../../components/Modal";
 
 function DeleteSTTLicense() {
@@ -14,11 +14,11 @@ function DeleteSTTLicense() {
   useEffect(() => {
     const fetchSTTLicense = async () => {
       try {
-        const response = await axios.get(
+        const response = await mockAPI.getById(
           `http://localhost:3000/api/stt-licenses/${id}`,
         );
-        setSTTLicense(response.data);
-      } catch (err) {
+        setSTTLicense(response.data as any);
+      } catch {
         setError("Failed to fetch STT license");
       } finally {
         setLoading(false);
@@ -29,9 +29,9 @@ function DeleteSTTLicense() {
 
   const handleConfirm = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/stt-licenses/${id}`);
+      await mockAPI.delete("sttLicenses", id!);
       navigate("/stt_licenses/list");
-    } catch (err) {
+    } catch {
       setError("Failed to delete STT license");
     }
   };

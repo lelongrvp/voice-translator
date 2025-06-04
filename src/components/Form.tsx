@@ -1,13 +1,31 @@
 import { useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 
-function Form({ fields, initialData, onSubmit, submitLabel }) {
+interface FormField {
+  name: string;
+  label: string;
+  type?: string;
+  required?: boolean;
+  options?: { value: string; label: string }[];
+}
+
+interface FormProps {
+  fields: FormField[];
+  initialData?: Record<string, unknown>;
+  onSubmit: (data: Record<string, unknown>) => void;
+  submitLabel: string;
+}
+
+function Form({ fields, initialData, onSubmit, submitLabel }: FormProps) {
   const [formData, setFormData] = useState(initialData || {});
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit(formData);
   };
@@ -22,13 +40,13 @@ function Form({ fields, initialData, onSubmit, submitLabel }) {
           {field.type === "select" ? (
             <select
               name={field.name}
-              value={formData[field.name] || ""}
+              value={String(formData[field.name] || "")}
               onChange={handleChange}
               className="mt-1 block w-full border rounded p-2"
               required={field.required}
             >
               <option value="">Select {field.label}</option>
-              {field.options.map((option) => (
+              {field.options?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -38,7 +56,7 @@ function Form({ fields, initialData, onSubmit, submitLabel }) {
             <input
               type={field.type || "text"}
               name={field.name}
-              value={formData[field.name] || ""}
+              value={String(formData[field.name] || "")}
               onChange={handleChange}
               className="mt-1 block w-full border rounded p-2"
               required={field.required}

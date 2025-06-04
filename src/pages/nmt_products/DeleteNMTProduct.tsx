@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Modal from "../../components/Modal";
 
 function DeleteNMTProduct() {
@@ -14,11 +14,11 @@ function DeleteNMTProduct() {
   useEffect(() => {
     const fetchNMTProduct = async () => {
       try {
-        const response = await axios.get(
+        const response = await mockAPI.getById(
           `http://localhost:3000/api/nmt-products/${id}`,
         );
-        setNMTProduct(response.data);
-      } catch (err) {
+        setNMTProduct(response.data as any);
+      } catch {
         setError("Failed to fetch NMT product");
       } finally {
         setLoading(false);
@@ -29,9 +29,9 @@ function DeleteNMTProduct() {
 
   const handleConfirm = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/nmt-products/${id}`);
+      await mockAPI.delete("nmtProducts", id!);
       navigate("/nmt_products/list");
-    } catch (err) {
+    } catch {
       setError("Failed to delete NMT product");
     }
   };

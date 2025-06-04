@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Form from "../../components/Form";
 
 function UpdateNMTLicense() {
@@ -15,11 +15,11 @@ function UpdateNMTLicense() {
     if (!isNew) {
       const fetchNMTLicense = async () => {
         try {
-          const response = await axios.get(
+          const response = await mockAPI.getById(
             `http://localhost:3000/api/nmt-licenses/${id}`,
           );
-          setNMTLicense(response.data);
-        } catch (err) {
+          setNMTLicense(response.data as any);
+        } catch {
           setError("Failed to fetch NMT license");
         } finally {
           setLoading(false);
@@ -31,15 +31,15 @@ function UpdateNMTLicense() {
     }
   }, [id, isNew]);
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       if (isNew) {
-        await axios.post("http://localhost:3000/api/nmt-licenses", data);
+        await mockAPI.create("nmtLicenses", data);
       } else {
-        await axios.put(`http://localhost:3000/api/nmt-licenses/${id}`, data);
+        await mockAPI.update("nmtLicenses", id!, data);
       }
       navigate("/nmt_licenses/list");
-    } catch (err) {
+    } catch {
       setError(
         isNew ? "Failed to create NMT license" : "Failed to update NMT license",
       );

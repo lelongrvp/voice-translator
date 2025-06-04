@@ -1,4 +1,12 @@
-function Modal({ isOpen, onClose, onConfirm, title, message }) {
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title: string;
+  message: string;
+}
+
+function Modal({ isOpen, onClose, onConfirm, title, message }: ModalProps) {
   if (!isOpen) return null;
 
   return (

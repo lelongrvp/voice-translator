@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Form from "../../components/Form";
 
 function UpdateNMTProduct() {
@@ -15,11 +15,11 @@ function UpdateNMTProduct() {
     if (!isNew) {
       const fetchNMTProduct = async () => {
         try {
-          const response = await axios.get(
+          const response = await mockAPI.getById(
             `http://localhost:3000/api/nmt-products/${id}`,
           );
-          setNMTProduct(response.data);
-        } catch (err) {
+          setNMTProduct(response.data as any);
+        } catch {
           setError("Failed to fetch NMT product");
         } finally {
           setLoading(false);
@@ -31,15 +31,15 @@ function UpdateNMTProduct() {
     }
   }, [id, isNew]);
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       if (isNew) {
-        await axios.post("http://localhost:3000/api/nmt-products", data);
+        await mockAPI.create("nmtProducts", data);
       } else {
-        await axios.put(`http://localhost:3000/api/nmt-products/${id}`, data);
+        await mockAPI.update("nmtProducts", id!, data);
       }
       navigate("/nmt_products/list");
-    } catch (err) {
+    } catch {
       setError(
         isNew ? "Failed to create NMT product" : "Failed to update NMT product",
       );

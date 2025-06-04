@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Form from "../../components/Form";
 
 function UpdateUser() {
@@ -15,11 +15,9 @@ function UpdateUser() {
     if (!isNew) {
       const fetchUser = async () => {
         try {
-          const response = await axios.get(
-            `http://localhost:3000/api/users/${id}`,
-          );
-          setUser(response.data);
-        } catch (err) {
+          const response = await mockAPI.getById("users", id ?? 0);
+          setUser(response.data as any);
+        } catch {
           setError("Failed to fetch user");
         } finally {
           setLoading(false);
@@ -31,15 +29,22 @@ function UpdateUser() {
     }
   }, [id, isNew]);
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       if (isNew) {
-        await axios.post("http://localhost:3000/api/users", data);
+        await mockAPI.create(
+          "users",
+          data as unknown as Record<string, unknown>
+        );
       } else {
-        await axios.put(`http://localhost:3000/api/users/${id}`, data);
+        await mockAPI.update(
+          "users",
+          id!,
+          data as unknown as Record<string, unknown>
+        );
       }
       navigate("/users/list");
-    } catch (err) {
+    } catch {
       setError(isNew ? "Failed to create user" : "Failed to update user");
     }
   };

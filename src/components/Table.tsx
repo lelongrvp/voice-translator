@@ -1,6 +1,22 @@
 import { Link } from "react-router-dom";
 
-function Table({ data, columns, basePath }) {
+interface Column {
+  key: string;
+  label: string;
+}
+
+export interface TableItem {
+  id: string | number;
+  [key: string]: unknown;
+}
+
+interface TableProps {
+  data: TableItem[];
+  columns: Column[];
+  basePath: string;
+}
+
+function Table({ data, columns, basePath }: TableProps) {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white border">
@@ -19,7 +35,7 @@ function Table({ data, columns, basePath }) {
             <tr key={item.id}>
               {columns.map((col) => (
                 <td key={col.key} className="border p-2">
-                  {item[col.key] || "-"}
+                  {String(item[col.key] || "-")}
                 </td>
               ))}
               <td className="border p-2 flex space-x-2">

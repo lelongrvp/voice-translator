@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Form from "../../components/Form";
 
 function UpdateSTTProduct() {
@@ -15,11 +15,9 @@ function UpdateSTTProduct() {
     if (!isNew) {
       const fetchSTTProduct = async () => {
         try {
-          const response = await axios.get(
-            `http://localhost:3000/api/stt-products/${id}`,
-          );
-          setSTTProduct(response.data);
-        } catch (err) {
+          const response = await mockAPI.getById("sttProducts", id ?? 0);
+          setSTTProduct(response.data as any);
+        } catch {
           setError("Failed to fetch STT product");
         } finally {
           setLoading(false);
@@ -31,17 +29,24 @@ function UpdateSTTProduct() {
     }
   }, [id, isNew]);
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       if (isNew) {
-        await axios.post("http://localhost:3000/api/stt-products", data);
+        await mockAPI.create(
+          "sttProducts",
+          data as unknown as Record<string, unknown>
+        );
       } else {
-        await axios.put(`http://localhost:3000/api/stt-products/${id}`, data);
+        await mockAPI.update(
+          "sttProducts",
+          id!,
+          data as unknown as Record<string, unknown>
+        );
       }
       navigate("/stt_products/list");
-    } catch (err) {
+    } catch {
       setError(
-        isNew ? "Failed to create STT product" : "Failed to update STT product",
+        isNew ? "Failed to create STT product" : "Failed to update STT product"
       );
     }
   };

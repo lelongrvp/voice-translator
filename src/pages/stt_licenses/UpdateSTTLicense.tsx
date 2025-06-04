@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Form from "../../components/Form";
 
 function UpdateSTTLicense() {
@@ -15,11 +15,11 @@ function UpdateSTTLicense() {
     if (!isNew) {
       const fetchSTTLicense = async () => {
         try {
-          const response = await axios.get(
+          const response = await mockAPI.getById(
             `http://localhost:3000/api/stt-licenses/${id}`,
           );
-          setSTTLicense(response.data);
-        } catch (err) {
+          setSTTLicense(response.data as any);
+        } catch {
           setError("Failed to fetch STT license");
         } finally {
           setLoading(false);
@@ -31,15 +31,15 @@ function UpdateSTTLicense() {
     }
   }, [id, isNew]);
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       if (isNew) {
-        await axios.post("http://localhost:3000/api/stt-licenses", data);
+        await mockAPI.create("sttLicenses", data);
       } else {
-        await axios.put(`http://localhost:3000/api/stt-licenses/${id}`, data);
+        await mockAPI.update("sttLicenses", id!, data);
       }
       navigate("/stt_licenses/list");
-    } catch (err) {
+    } catch {
       setError(
         isNew ? "Failed to create STT license" : "Failed to update STT license",
       );

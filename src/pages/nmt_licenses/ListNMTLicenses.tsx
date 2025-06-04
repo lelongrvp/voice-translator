@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { mockAPI } from "../../services/mockApi";
 import Table from "../../components/Table";
 import { Link } from "react-router-dom";
 
@@ -11,11 +11,11 @@ function ListNMTLicenses() {
   useEffect(() => {
     const fetchNMTLicenses = async () => {
       try {
-        const response = await axios.get(
+        const response = await mockAPI.getAll(
           "http://localhost:3000/api/nmt-licenses",
         );
         setNMTLicenses(response.data);
-      } catch (err) {
+      } catch {
         setError("Failed to fetch NMT licenses");
       } finally {
         setLoading(false);
@@ -52,7 +52,6 @@ function ListNMTLicenses() {
         data={nmtLicenses}
         columns={columns}
         basePath="/nmt_licenses"
-        dataKey="licenses"
       />
     </div>
   );
